@@ -62,7 +62,7 @@ func main() {
   failOnError(err, "amqp.channel")
   defer ch.Close()
 
-  messages, err := ch.Consume("system.listings", "", true, false, false, false, nil)
+  messages, err := ch.Consume(os.Getenv("AMQP_QUEUE"), "", true, false, false, false, nil)
   failOnError(err, "amqp.queue.consume")
 
   for message := range messages {
