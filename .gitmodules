@@ -1,0 +1,3 @@
+[submodule "host-assistant-proto"]
+	path = host-assistant-proto
+	url = https://github.com/tjurkiewicz/host-assistant-proto

@@ -1,3 +1,5 @@
+//go:generate protoc --go_out=. host-assistant-proto/listing.proto
+
 package main
 
 import (
