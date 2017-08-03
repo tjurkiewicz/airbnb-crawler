@@ -6,20 +6,19 @@ import (
   "fmt"
   "os"
   "github.com/streadway/amqp"
+  "github.com/golang/protobuf/proto"
   "github.com/tjurkiewicz/airbnb-crawler/host-assistant-proto"
   "github.com/tjurkiewicz/airbnb-api-client"
 )
 
 const BASE_URL string = "https://www.airbnb.com/api/v1/listings/"
 
-func ReadListing(id string) {
+func ReadListing(id int64) {
   cli := client.AirBNB{ApiKey: os.Getenv("AIRBNB_KEY")}
-  listingResponse, errorResponse, err := cli.ReadListing(id)
+  listingResponse, errorResponse, err := cli.ReadListing(fmt.Sprintf("%d", id))
   failOnError(err, "airbnb.readlisting")
 
   fmt.Println(listingResponse, errorResponse)
-
-  _ = listing.ListingRequest{Id: 1}
 }
 
 func main() {
@@ -35,8 +34,11 @@ func main() {
   failOnError(err, "amqp.queue.consume")
 
   for message := range messages {
-    id := string(message.Body[:])
-    go ReadListing(id) 
+    request := &listing.ListingRequest{}
+    err = proto.Unmarshal(message.Body, request)
+    failOnError(err, "proto.unmarshal")
+
+    go ReadListing(request.Id)
   }
 }
 
