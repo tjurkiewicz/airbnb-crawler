@@ -5,20 +5,17 @@ package main
 import (
   "fmt"
   "os"
-  "github.com/dghubble/sling"
   "github.com/streadway/amqp"
-  "github.com/tjurkiewicz/airbnb-crawler/host-assistant-proto" 
+  "github.com/tjurkiewicz/airbnb-crawler/host-assistant-proto"
+  "github.com/tjurkiewicz/airbnb-api-client"
 )
 
 const BASE_URL string = "https://www.airbnb.com/api/v1/listings/"
 
 func ReadListing(id string) {
-  params := &Params{Key: os.Getenv("AIRBNB_KEY")}
-  listingResponse := new(ListingResponse)
-  errorResponse := new(ErrorResponse)
-
-  _, err := sling.New().Base(BASE_URL).Path(id).QueryStruct(params).Receive(listingResponse, errorResponse)
-  failOnError(err, "sling.receive")
+  cli := client.AirBNB{ApiKey: os.Getenv("AIRBNB_KEY")}
+  listingResponse, errorResponse, err := cli.ReadListing(id)
+  failOnError(err, "airbnb.readlisting")
 
   fmt.Println(listingResponse, errorResponse)
 
