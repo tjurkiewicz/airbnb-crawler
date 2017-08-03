@@ -5,6 +5,7 @@ import (
   "os"
   "github.com/dghubble/sling"
   "github.com/streadway/amqp"
+  "github.com/tjurkiewicz/airbnb-crawler/host-assistant-proto" 
 )
 
 const BASE_URL string = "https://www.airbnb.com/api/v1/listings/"
@@ -18,6 +19,8 @@ func ReadListing(id string) {
   failOnError(err, "sling.receive")
 
   fmt.Println(listingResponse, errorResponse)
+
+  _ = listing.ListingRequest{Id: 1}
 }
 
 func main() {
